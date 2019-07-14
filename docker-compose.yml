@@ -1,0 +1,20 @@
+version: "3.7"
+
+services:
+  norikra:
+    container_name: norikra
+    image: ragingo/norikra
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 26571:26571
+      - 26578:26578
+      - 24224:24224
+      - 24224:24224/udp
+    network_mode: "bridge"
+    command: /bin/bash
+    stdin_open: true
+    tty: true
+    environment:
+      TZ: "Asia/Tokyo"
