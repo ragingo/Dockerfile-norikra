@@ -1,32 +1,14 @@
-FROM ubuntu:18.04
+FROM ragingo/rubies
 LABEL maintainer="ragingo"
 
 SHELL ["/bin/bash", "-c"]
 ARG DEBIAN_FRONTEND=noninteractive
 
-# general
-RUN apt update
-RUN apt -y upgrade
-RUN apt -y install --no-install-recommends openjdk-8-jre
-RUN apt -y install --no-install-recommends wget curl vim iputils-ping
-
-# ruby
-RUN apt -y install rbenv
-RUN rbenv install 2.4.1
-RUN rbenv install jruby-9.1.12.0
-RUN rbenv global jruby-9.1.12.0
-RUN ls -al /root/.rbenv
-RUN ls -al /root/.rbenv/shims
-RUN echo 'export PATH="/root/.rbenv/shims:$PATH"' > ~/.bash_profile
-RUN echo 'eval "$(rbenv init -)"' >> ~/.bash_profile
-RUN source ~/.bash_profile
-ENV PATH /root/.rbenv/shims:$PATH
-RUN echo $PATH
-
-# system -> jruby
-RUN rbenv global jruby-9.1.12.0
+RUN rbenv install -l
 RUN rbenv versions
-RUN ruby -v
+
+# jruby
+RUN rbenv global jruby-9.1.12.0
 
 # norikra
 RUN gem install norikra --no-ri --no-rdoc -V
@@ -58,8 +40,4 @@ EXPOSE 24224
 # norikra start
 CMD norikra start -Xmx2g --pidfile /var/run/norikra.pid --logdir=/var/log/norikra
 
-# RUN echo '{"col2":"bbb","col3":"ccc","col1":"aaa"}' | norikra-client event send test
-
 RUN apt clean
-
-# RUN gem environment
